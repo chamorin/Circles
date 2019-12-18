@@ -1,7 +1,7 @@
 CC = gcc
 OBJS = $(patsubst %.c,%.o,$(wildcard *.c))
-CFLAGS = -Wall -Wextra `sdl2-config --cflags`
-LDFLAGS = -lSDL2_image `sdl2-config --libs`
+CFLAGS = -lm -Wall -Wextra `sdl2-config --cflags`
+LDFLAGS = -lm -lSDL2_image `sdl2-config --libs`
 EXEC = circles
 
 $(EXEC): $(OBJS)
