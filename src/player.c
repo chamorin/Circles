@@ -60,6 +60,11 @@ void Player_move_right(struct Player *player, const float *originX,
   *angle += PLAYER_MOVEMENT_ANGLE;
   player->sprite_posX = *originX + cos(*angle) * CENTER_CIRCLE_RADIUS;
   player->sprite_posY = *originY + sin(*angle) * CENTER_CIRCLE_RADIUS;
+  if (player->position == PLAYER_POSSIBLE_POSITIONS - 1) {
+    player->position = 0;
+  } else {
+    ++player->position;
+  }
 }
 
 void Player_move_left(struct Player *player, const float *originX,
@@ -67,4 +72,9 @@ void Player_move_left(struct Player *player, const float *originX,
   *angle -= PLAYER_MOVEMENT_ANGLE;
   player->sprite_posX = *originX + cos(*angle) * CENTER_CIRCLE_RADIUS;
   player->sprite_posY = *originY + sin(*angle) * CENTER_CIRCLE_RADIUS;
+  if (player->position == 0) {
+    player->position = PLAYER_POSSIBLE_POSITIONS - 1;
+  } else {
+    --player->position;
+  }
 }
