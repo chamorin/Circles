@@ -15,7 +15,6 @@ enum GameState {
 
 struct Game {
     enum GameState state;               // The game state
-    struct Spritesheet *background;     // The game background sprite
     struct Spritesheet *player_sprite;  // The player sprite
     float player_sprite_posX;           // The player sprite X position
     float player_sprite_posY;           // The player sprite Y position

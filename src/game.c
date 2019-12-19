@@ -12,7 +12,6 @@ struct Game *Game_initialize(SDL_Renderer *renderer) {
   game->state = GAME_PLAY;
   game->player_position = 0;
   game->player_sprite = Spritesheet_create(PLAYER_FILENAME, 1, 1, 1, renderer);
-  game->background = Spritesheet_create(BACKGROUND_FILENAME, 1, 1, 1, renderer);
   return game;
 }
 
@@ -20,7 +19,8 @@ int Game_alpha(bool chosen) { return chosen ? 255 : 64; }
 
 void Game_run(struct Game *game) {
   SDL_Event e;
-  float angle = PLAYER_MOVEMENT_ANGLE;
+  float angle = SECTOR_ANGLE;
+  float sector_angle = CIRCLE_TO_RADIANT;
   float originX = SCREEN_WIDTH / 2;
   float originY = SCREEN_HEIGHT / 2;
 
@@ -47,9 +47,10 @@ void Game_run(struct Game *game) {
     SDL_Point point;
     point.x = originX;
     point.y = originY;
-    SDL_Color color = {128, 128, 128};
-    Spritesheet_render(game->background, BACKGROUND_X, BACKGROUND_Y, 255, 0);
-    Game_drawCircle(point, game->renderer, CENTER_CIRCLE_RADIUS - 20, color);
+    SDL_Color circle_color = {128, 128, 128};
+    Game_drawSectors(point, game->renderer, &sector_angle);
+    Game_drawCircle(point, game->renderer, CENTER_CIRCLE_RADIUS - 20,
+                    circle_color);
     Spritesheet_render(game->player_sprite, game->player_sprite_posX,
                        game->player_sprite_posY, 255, 0);
     SDL_RenderPresent(game->renderer);
@@ -58,7 +59,6 @@ void Game_run(struct Game *game) {
 
 void Game_delete(struct Game *game) {
   if (game != NULL) {
-    Spritesheet_delete(game->background);
     Spritesheet_delete(game->player_sprite);
     free(game);
   }
@@ -66,7 +66,7 @@ void Game_delete(struct Game *game) {
 
 void Player_move_right(struct Game *game, const float *originX,
                        const float *originY, float *angle) {
-  *angle += PLAYER_MOVEMENT_ANGLE;
+  *angle += SECTOR_ANGLE;
   game->player_sprite_posX =
       (*originX + cos(*angle) * CENTER_CIRCLE_RADIUS) - PLAYER_WIDTH / 2;
   game->player_sprite_posY =
@@ -80,7 +80,7 @@ void Player_move_right(struct Game *game, const float *originX,
 
 void Player_move_left(struct Game *game, const float *originX,
                       const float *originY, float *angle) {
-  *angle -= PLAYER_MOVEMENT_ANGLE;
+  *angle -= SECTOR_ANGLE;
   game->player_sprite_posX =
       (*originX + cos(*angle) * CENTER_CIRCLE_RADIUS) - PLAYER_WIDTH / 2;
   game->player_sprite_posY =
@@ -104,4 +104,29 @@ void Game_drawCircle(SDL_Point center, SDL_Renderer *renderer, int radius,
       }
     }
   }
+}
+
+void Game_drawSector(SDL_Point center, SDL_Renderer *renderer, SDL_Color color,
+                     float *sector_angle) {
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+  int X, Y;
+  for (float angle = 0.0; angle < *sector_angle; angle += 0.001) {
+    X = center.x + cos(angle - SECTOR_ANGLE / 2) * SCREEN_WIDTH;
+    Y = center.y + sin(angle - SECTOR_ANGLE / 2) * SCREEN_WIDTH;
+    SDL_RenderDrawLine(renderer, center.x, center.y, X, Y);
+  }
+  *sector_angle -= SECTOR_ANGLE;
+}
+
+void Game_drawSectors(SDL_Point center, SDL_Renderer *renderer,
+                      float *sector_angle) {
+  SDL_Color sector_color_grey = {200, 200, 200};
+  SDL_Color sector_color_white = {255, 255, 255};
+  Game_drawSector(center, renderer, sector_color_grey, sector_angle);
+  Game_drawSector(center, renderer, sector_color_white, sector_angle);
+  Game_drawSector(center, renderer, sector_color_grey, sector_angle);
+  Game_drawSector(center, renderer, sector_color_white, sector_angle);
+  Game_drawSector(center, renderer, sector_color_grey, sector_angle);
+  Game_drawSector(center, renderer, sector_color_white, sector_angle);
+  *sector_angle = CIRCLE_TO_RADIANT;
 }
