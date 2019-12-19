@@ -4,7 +4,7 @@
 #include "sdl2.h"
 #include "constants.h"
 #include "menu.h"
-#include "player.h"
+#include "game.h"
 
 // --------------- //
 // Data structures //
@@ -19,8 +19,7 @@ enum ApplicationState {
 struct Application {
     enum ApplicationState state;                // The current state
     struct Menu *menu;                          // The home menu
-    struct Player *player;                      // The playable component
-    int positions[PLAYER_POSSIBLE_POSITIONS];   // Player position on scene
+    struct Game *game;                          // The game component
     SDL_Window* window;                         // The window
     SDL_Renderer* renderer;                     // The renderer
 };
