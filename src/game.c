@@ -11,8 +11,8 @@ struct Game *Game_initialize(SDL_Renderer *renderer) {
   game = malloc(sizeof(struct Game));
   game->renderer = renderer;
   game->state = GAME_PLAY;
-  game->player_position = 0;
-  game->difficulty = HARD;
+  game->player_position = 1;
+  game->difficulty = EASY;
   return game;
 }
 
@@ -64,6 +64,8 @@ void Game_run(struct Game *game) {
     Player_drawTrigon(game->renderer, &game->player_triang_posX,
                       &game->player_triang_posY, &originX, &originY, &angle,
                       &player_rotation);
+
+    Game_checkPlayerState(game);
 
     SDL_RenderPresent(game->renderer);
   }
@@ -135,16 +137,16 @@ void Game_drawBackground(SDL_Renderer *renderer, const float *originX,
 
 void Game_initArcs(struct Game *game) {
 
-  for (int i = 0; i < 6; ++i)
+  for (int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i)
     game->arcs[i] = 0;
 
   for (int i = 0; i < 3 + game->difficulty; ++i)
-    game->arcs[rand() % 6] = 500;
+    game->arcs[rand() % PLAYER_POSSIBLE_POSITIONS] = 500;
 }
 
 void Game_resetArcs(struct Game *game) {
   int arcs_to_reset = 0;
-  for (int i = 0; i < 6; ++i) {
+  for (int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i) {
     if (game->arcs[i] <= CENTER_CIRCLE_RADIUS - 20 || game->arcs[i] <= 0)
       ++arcs_to_reset;
   }
@@ -157,7 +159,7 @@ void Game_resetArcs(struct Game *game) {
 void Game_drawArcs(SDL_Renderer *renderer, struct Game *game,
                    const float *originX, const float *originY,
                    const int *rotation) {
-  for (int i = 0; i < 6; ++i) {
+  for (int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i) {
     if (game->arcs[i] != 0) {
       arcRGBA(game->renderer, *originX, *originY, game->arcs[i],
               i * SECTOR_ANGLE_DEGREES + *rotation,
@@ -175,7 +177,16 @@ void Game_drawArcs(SDL_Renderer *renderer, struct Game *game,
               i * SECTOR_ANGLE_DEGREES + *rotation,
               i * SECTOR_ANGLE_DEGREES + SECTOR_ANGLE_DEGREES + *rotation, 255,
               0, 0, 255);
-      game->arcs[i] -= game->difficulty + 1;
+      game->arcs[i] -= game->difficulty + 3;
+    }
+  }
+}
+
+void Game_checkPlayerState(struct Game *game) {
+  for (int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i) {
+    if (game->arcs[i] <= CENTER_CIRCLE_RADIUS && game->arcs[i] > 0 &&
+        game->player_position == i) {
+      game->state = GAME_OVER;
     }
   }
 }
