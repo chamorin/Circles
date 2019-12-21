@@ -15,9 +15,8 @@ enum GameState {
 
 struct Game {
     enum GameState state;               // The game state
-    struct Spritesheet *player_sprite;  // The player sprite
-    float player_sprite_posX;           // The player sprite X position
-    float player_sprite_posY;           // The player sprite Y position
+    float player_triang_posX;           // The player triangle tip X position
+    float player_triang_posY;           // The player triangle tip Y position
     unsigned int player_position;       // The player current position in positions table
     SDL_Renderer *renderer;             // The renderer
 };

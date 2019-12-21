@@ -26,6 +26,4 @@
 #define SECTOR_ANGLE 1.0472
 #define CIRCLE_TO_RADIANT 6.28319
 #define PLAYER_POSSIBLE_POSITIONS 6
-#define PLAYER_FILENAME "../assets/player.png"
 #define PLAYER_WIDTH 25
-#define PLAYER_HEIGHT 24
