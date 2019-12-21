@@ -12,6 +12,7 @@ struct Game *Game_initialize(SDL_Renderer *renderer) {
   game->renderer = renderer;
   game->state = GAME_PLAY;
   game->player_position = 0;
+  game->difficulty = HARD;
   return game;
 }
 
@@ -23,7 +24,8 @@ void Game_run(struct Game *game) {
   float sector_angle = CIRCLE_TO_RADIANT;
   float originX = SCREEN_WIDTH / 2;
   float originY = SCREEN_HEIGHT / 2;
-  int rotation = 0;
+  int sector_rotation = game->difficulty;
+  int player_rotation = game->difficulty;
 
   game->player_triang_posX = (originX + cos(angle) * CENTER_CIRCLE_RADIUS);
   game->player_triang_posY = (originY + sin(angle) * CENTER_CIRCLE_RADIUS);
@@ -33,10 +35,10 @@ void Game_run(struct Game *game) {
       if (e.type == SDL_KEYDOWN) {
         switch (e.key.keysym.sym) {
         case SDLK_RIGHT:
-          Player_move_right(game, &originX, &originY, &angle);
+          Player_move_right(game, &angle);
           break;
         case SDLK_LEFT:
-          Player_move_left(game, &originX, &originY, &angle);
+          Player_move_left(game, &angle);
           break;
         }
       }
@@ -44,15 +46,15 @@ void Game_run(struct Game *game) {
     SDL_SetRenderDrawColor(game->renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(game->renderer);
 
-    Game_drawBackground(game->renderer, &originX, &originY, &rotation);
-    //++rotation;
+    Game_drawBackground(game->renderer, &originX, &originY, &sector_rotation);
+    sector_rotation += game->difficulty;
 
     filledCircleRGBA(game->renderer, originX, originY,
                      CENTER_CIRCLE_RADIUS - 20, 128, 128, 128, 255);
 
     Player_drawTrigon(game->renderer, &game->player_triang_posX,
                       &game->player_triang_posY, &originX, &originY, &angle,
-                      &rotation);
+                      &player_rotation);
 
     SDL_RenderPresent(game->renderer);
   }
@@ -64,10 +66,15 @@ void Game_delete(struct Game *game) {
   }
 }
 
-void Player_drawTrigon(SDL_Renderer *renderer, const float *player_triang_posX,
-                       const float *player_triang_posY, const float *originX,
+void Player_drawTrigon(SDL_Renderer *renderer, float *player_triang_posX,
+                       float *player_triang_posY, const float *originX,
                        const float *originY, float *angle,
                        const int *rotation) {
+
+  *angle += *rotation * M_PI / 180.0;
+
+  *player_triang_posX = (*originX + cos(*angle) * CENTER_CIRCLE_RADIUS);
+  *player_triang_posY = (*originY + sin(*angle) * CENTER_CIRCLE_RADIUS);
 
   float left_point_X =
       *originX + cos(*angle - 0.3) * (CENTER_CIRCLE_RADIUS - 10);
@@ -83,11 +90,8 @@ void Player_drawTrigon(SDL_Renderer *renderer, const float *player_triang_posX,
                    255);
 }
 
-void Player_move_right(struct Game *game, const float *originX,
-                       const float *originY, float *angle) {
+void Player_move_right(struct Game *game, float *angle) {
   *angle += SECTOR_ANGLE;
-  game->player_triang_posX = (*originX + cos(*angle) * CENTER_CIRCLE_RADIUS);
-  game->player_triang_posY = (*originY + sin(*angle) * CENTER_CIRCLE_RADIUS);
   if (game->player_position == PLAYER_POSSIBLE_POSITIONS - 1) {
     game->player_position = 0;
   } else {
@@ -95,11 +99,8 @@ void Player_move_right(struct Game *game, const float *originX,
   }
 }
 
-void Player_move_left(struct Game *game, const float *originX,
-                      const float *originY, float *angle) {
+void Player_move_left(struct Game *game, float *angle) {
   *angle -= SECTOR_ANGLE;
-  game->player_triang_posX = (*originX + cos(*angle) * CENTER_CIRCLE_RADIUS);
-  game->player_triang_posY = (*originY + sin(*angle) * CENTER_CIRCLE_RADIUS);
   if (game->player_position == 0) {
     game->player_position = PLAYER_POSSIBLE_POSITIONS - 1;
   } else {
