@@ -20,12 +20,13 @@ enum Difficulty {
 };
 
 struct Game {
-    enum GameState state;               // The game state
-    enum Difficulty difficulty;         // The game level of difficulty
-    float player_triang_posX;           // The player triangle tip X position
-    float player_triang_posY;           // The player triangle tip Y position
-    unsigned int player_position;       // The player current position in positions table
-    SDL_Renderer *renderer;             // The renderer
+    enum GameState state;                   // The game state
+    enum Difficulty difficulty;             // The game level of difficulty
+    float player_triang_posX;               // The player triangle tip X position
+    float player_triang_posY;               // The player triangle tip Y position
+    unsigned int player_position;           // The player current position in positions table
+    int arcs[PLAYER_POSSIBLE_POSITIONS];    // The arcs in the game
+    SDL_Renderer *renderer;                 // The renderer
 };
 
 // --------- //

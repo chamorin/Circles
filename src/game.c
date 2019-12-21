@@ -20,15 +20,18 @@ int Game_alpha(bool chosen) { return chosen ? 255 : 64; }
 
 void Game_run(struct Game *game) {
   SDL_Event e;
-  float angle = SECTOR_ANGLE + SECTOR_ANGLE / 2;
+  float angle = SECTOR_ANGLE_RADIANT + SECTOR_ANGLE_RADIANT / 2;
   float sector_angle = CIRCLE_TO_RADIANT;
   float originX = SCREEN_WIDTH / 2;
   float originY = SCREEN_HEIGHT / 2;
-  int sector_rotation = game->difficulty;
+  int sector_arcs_rotation = game->difficulty;
   int player_rotation = game->difficulty;
+  time_t t;
+  srand((unsigned)time(&t));
 
   game->player_triang_posX = (originX + cos(angle) * CENTER_CIRCLE_RADIUS);
   game->player_triang_posY = (originY + sin(angle) * CENTER_CIRCLE_RADIUS);
+  Game_initArcs(game);
 
   while (game->state != GAME_OVER) {
     while (SDL_PollEvent(&e) != 0) {
@@ -46,11 +49,17 @@ void Game_run(struct Game *game) {
     SDL_SetRenderDrawColor(game->renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(game->renderer);
 
-    Game_drawBackground(game->renderer, &originX, &originY, &sector_rotation);
-    sector_rotation += game->difficulty;
+    Game_drawBackground(game->renderer, &originX, &originY,
+                        &sector_arcs_rotation);
+    sector_arcs_rotation += game->difficulty;
 
     filledCircleRGBA(game->renderer, originX, originY,
                      CENTER_CIRCLE_RADIUS - 20, 128, 128, 128, 255);
+
+    Game_drawArcs(game->renderer, game, &originX, &originY,
+                  &sector_arcs_rotation);
+
+    Game_resetArcs(game);
 
     Player_drawTrigon(game->renderer, &game->player_triang_posX,
                       &game->player_triang_posY, &originX, &originY, &angle,
@@ -91,7 +100,7 @@ void Player_drawTrigon(SDL_Renderer *renderer, float *player_triang_posX,
 }
 
 void Player_move_right(struct Game *game, float *angle) {
-  *angle += SECTOR_ANGLE;
+  *angle += SECTOR_ANGLE_RADIANT;
   if (game->player_position == PLAYER_POSSIBLE_POSITIONS - 1) {
     game->player_position = 0;
   } else {
@@ -100,7 +109,7 @@ void Player_move_right(struct Game *game, float *angle) {
 }
 
 void Player_move_left(struct Game *game, float *angle) {
-  *angle -= SECTOR_ANGLE;
+  *angle -= SECTOR_ANGLE_RADIANT;
   if (game->player_position == 0) {
     game->player_position = PLAYER_POSSIBLE_POSITIONS - 1;
   } else {
@@ -122,4 +131,51 @@ void Game_drawBackground(SDL_Renderer *renderer, const float *originX,
                 300 + *rotation, 204, 204, 204, 255);
   filledPieRGBA(renderer, *originX, *originY, SCREEN_WIDTH, 300 + *rotation,
                 360 + *rotation, 255, 255, 255, 255);
+}
+
+void Game_initArcs(struct Game *game) {
+
+  for (int i = 0; i < 6; ++i)
+    game->arcs[i] = 0;
+
+  for (int i = 0; i < 3 + game->difficulty; ++i)
+    game->arcs[rand() % 6] = 500;
+}
+
+void Game_resetArcs(struct Game *game) {
+  int arcs_to_reset = 0;
+  for (int i = 0; i < 6; ++i) {
+    if (game->arcs[i] <= CENTER_CIRCLE_RADIUS - 20 || game->arcs[i] <= 0)
+      ++arcs_to_reset;
+  }
+
+  if (arcs_to_reset == PLAYER_POSSIBLE_POSITIONS) {
+    Game_initArcs(game);
+  }
+}
+
+void Game_drawArcs(SDL_Renderer *renderer, struct Game *game,
+                   const float *originX, const float *originY,
+                   const int *rotation) {
+  for (int i = 0; i < 6; ++i) {
+    if (game->arcs[i] != 0) {
+      arcRGBA(game->renderer, *originX, *originY, game->arcs[i],
+              i * SECTOR_ANGLE_DEGREES + *rotation,
+              i * SECTOR_ANGLE_DEGREES + SECTOR_ANGLE_DEGREES + *rotation, 255,
+              0, 0, 255);
+      arcRGBA(game->renderer, *originX, *originY, game->arcs[i] + 1,
+              i * SECTOR_ANGLE_DEGREES + *rotation,
+              i * SECTOR_ANGLE_DEGREES + SECTOR_ANGLE_DEGREES + *rotation, 255,
+              0, 0, 255);
+      arcRGBA(game->renderer, *originX, *originY, game->arcs[i] + 2,
+              i * SECTOR_ANGLE_DEGREES + *rotation,
+              i * SECTOR_ANGLE_DEGREES + SECTOR_ANGLE_DEGREES + *rotation, 255,
+              0, 0, 255);
+      arcRGBA(game->renderer, *originX, *originY, game->arcs[i] + 3,
+              i * SECTOR_ANGLE_DEGREES + *rotation,
+              i * SECTOR_ANGLE_DEGREES + SECTOR_ANGLE_DEGREES + *rotation, 255,
+              0, 0, 255);
+      game->arcs[i] -= game->difficulty + 1;
+    }
+  }
 }
