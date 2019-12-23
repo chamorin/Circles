@@ -11,7 +11,7 @@ struct Game *Game_initialize(SDL_Renderer *renderer) {
   game = malloc(sizeof(struct Game));
   game->renderer = renderer;
   game->state = GAME_PLAY;
-  game->player_position = 0;
+  game->player_position = 1;
   return game;
 }
 
