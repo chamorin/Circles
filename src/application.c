@@ -40,6 +40,7 @@ struct Application *Application_initialize() {
   application->state = APPLICATION_STATE_MENU;
 
   application->game = Game_initialize(application->renderer);
+  
   if (application->game == NULL) {
     fprintf(stderr, "Failed to initialize game: %s\n", IMG_GetError());
     return NULL;
@@ -60,6 +61,7 @@ void Application_run(struct Application *application) {
       }
       break;
     case APPLICATION_STATE_PLAY:
+     application->game->difficulty = application->menu->difficulty;
       Menu_delete(application->menu);
       Game_run(application->game);
       break;

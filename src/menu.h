@@ -3,6 +3,7 @@
 
 #include "sdl2.h"
 #include "constants.h"
+#include "game.h"
 
 // --------------- //
 // Data structures //
@@ -17,10 +18,15 @@ enum MenuState {
 
 struct Menu {
     enum MenuState state;           // The choice of the user
+    enum Difficulty difficulty;     // THe choice of difficulty
     struct Spritesheet *background; // The menu background
     struct Spritesheet *title;      // The title sprite
     struct Spritesheet *play;       // The play sprite
     struct Spritesheet *quit;       // The quit sprite
+    struct Spritesheet *diff;       // The difficulty sprite
+    struct Sritesheet  * easy;      // The easy sprite
+    struct Sritesheet  * medium;    // The medium sprite
+    struct Sritesheet  * hard;      // The hard sprite
     SDL_Renderer *renderer;         // The renderer
 };
 

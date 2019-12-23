@@ -22,6 +22,18 @@
 #define DIFFICULTY_WIDTH 325
 #define DIFFICULTY_X (0.5 * SCREEN_WIDTH - 0.5 * DIFFICULTY_WIDTH)
 #define DIFFICULTY_Y (0.8 * SCREEN_HEIGHT)
+#define EASY_FILENAME "../assets/easy-small.png"
+#define EASY_WIDTH 108
+#define EASY_X (0.39 * SCREEN_WIDTH - 0.5 * EASY_WIDTH)
+#define EASY_Y (0.75 * SCREEN_HEIGHT)
+#define MEDIUM_FILENAME "../assets/medium-small.png"
+#define MEDIUM_WIDTH 108
+#define MEDIUM_X (0.5 * SCREEN_WIDTH - 0.5 * MEDIUM_WIDTH)
+#define MEDIUM_Y (0.75 * SCREEN_HEIGHT)
+#define HARD_FILENAME "../assets/hard-small.png"
+#define HARD_WIDTH 108
+#define HARD_X (0.63 * SCREEN_WIDTH - 0.5 * HARD_WIDTH)
+#define HARD_Y (0.75 * SCREEN_HEIGHT)
 #define CENTER_CIRCLE_RADIUS 60
 #define SECTOR_ANGLE_RADIANT 1.0472
 #define SECTOR_ANGLE_DEGREES 60
