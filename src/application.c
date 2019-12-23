@@ -40,7 +40,7 @@ struct Application *Application_initialize() {
   application->state = APPLICATION_STATE_MENU;
 
   application->game = Game_initialize(application->renderer);
-  
+
   if (application->game == NULL) {
     fprintf(stderr, "Failed to initialize game: %s\n", IMG_GetError());
     return NULL;
@@ -61,9 +61,9 @@ void Application_run(struct Application *application) {
       }
       break;
     case APPLICATION_STATE_PLAY:
-     application->game->difficulty = application->menu->difficulty;
-      Menu_delete(application->menu);
+      application->game->difficulty = application->menu->difficulty;
       Game_run(application->game);
+      application->state = APPLICATION_STATE_MENU;
       break;
     case APPLICATION_STATE_QUIT:
       break;
@@ -75,6 +75,7 @@ void Application_shutDown(struct Application *application) {
   SDL_DestroyRenderer(application->renderer);
   SDL_DestroyWindow(application->window);
   Menu_delete(application->menu);
+  Game_delete(application->game);
   free(application);
   application = NULL;
   IMG_Quit();

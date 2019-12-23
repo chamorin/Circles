@@ -27,6 +27,7 @@ int Menu_alpha(bool chosen) { return chosen ? 255 : 64; }
 void Menu_run(struct Menu *menu) {
   SDL_Event e;
   bool difficultySelection = false;
+  menu->state = MENU_PLAY_FOCUS;
   while (menu->state != MENU_PLAY && menu->state != MENU_QUIT) {
     while (SDL_PollEvent(&e) != 0) {
       if (e.type == SDL_QUIT) {

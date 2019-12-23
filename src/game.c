@@ -27,7 +27,8 @@ void Game_run(struct Game *game) {
   int player_rotation = game->difficulty;
   time_t t;
   srand((unsigned)time(&t));
-
+  game->state = GAME_PLAY;
+  game->player_position = 1;
   game->player_triang_posX = (originX + cos(angle) * CENTER_CIRCLE_RADIUS);
   game->player_triang_posY = (originY + sin(angle) * CENTER_CIRCLE_RADIUS);
   Game_initArcs(game);
