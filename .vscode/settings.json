@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "player.h": "c",
-        "random": "c"
+        "random": "c",
+        "cwchar": "c",
+        "type_traits": "c",
+        "cmath": "c",
+        "limits": "c"
     }
 }
