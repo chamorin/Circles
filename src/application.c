@@ -14,7 +14,7 @@ struct Application *Application_initialize() {
   }
   application = malloc(sizeof(struct Application));
   application->window =
-      SDL_CreateWindow("Maze", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      SDL_CreateWindow("Circles", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                        SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
   if (application->window == NULL) {
     fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
