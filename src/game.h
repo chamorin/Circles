@@ -125,4 +125,9 @@ void Game_drawArcs(struct Game *game, const float *originX,
  */
 void Game_checkPlayerState(struct Game *game);
 
+/**
+ * Play music in game
+ */
+void Game_playMusic();
+
 #endif

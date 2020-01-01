@@ -30,18 +30,7 @@ void Game_run(struct Game *game) {
   game->player_triang_posX = (originX + cos(angle) * CENTER_CIRCLE_RADIUS);
   game->player_triang_posY = (originY + sin(angle) * CENTER_CIRCLE_RADIUS);
   Game_initArcs(game);
-  Mix_Music *gMusic = NULL;
-
-  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-    printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n",
-           Mix_GetError());
-  }
-
-  gMusic = Mix_LoadMUS(MUSIC_FILENAME);
-  if (gMusic == NULL) {
-    printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
-  }
-  Mix_PlayMusic(gMusic, -1);
+  Game_playMusic();
 
   while (game->state != GAME_OVER) {
     while (SDL_PollEvent(&e) != 0) {
@@ -212,4 +201,5 @@ void Game_playMusic() {
   if (gMusic == NULL) {
     printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
   }
+  Mix_PlayMusic(gMusic, -1);
 }
