@@ -16,13 +16,21 @@ enum GameState {
 enum Difficulty { EASY, MEDIUM, HARD };
 
 struct Game {
-  enum GameState state;                 // The game state
-  enum Difficulty difficulty;           // The game level of difficulty
-  float player_triang_posX;             // The player triangle tip X position
-  float player_triang_posY;             // The player triangle tip Y position
-  unsigned int player_position;         // The player current position in positions table
-  int arcs[PLAYER_POSSIBLE_POSITIONS];  // The arcs in the game
-  SDL_Renderer *renderer;               // The renderer
+    enum GameState state;                       // The game state
+    enum Difficulty difficulty;                 // The game level of difficulty
+    float player_triang_posX;                   // The player triangle tip X position
+    float player_triang_posY;                   // The player triangle tip Y position
+    unsigned int player_position;               // The player current position in positions table
+    int arcs[PLAYER_POSSIBLE_POSITIONS];        // The arcs in the game
+    struct Spritesheet *first_digit_sprite;     // The sprite for seconds in decades
+    struct Spritesheet *second_digit_sprite;    // The sprite for seconds
+    struct Spritesheet *dot_sprite;             // The sprite for the dot between digits
+    struct Spritesheet *third_digit_sprite;     // The sprite for seconds in decimal
+    int last_time;                              // The stored time when a tenth of second passes
+    int second_count;                           // The timer second count
+    int tenth_of_second_count;                  // The timer one tenth count
+    int tenth_count;                            // The timer tenth count
+    SDL_Renderer *renderer;                     // The renderer
 };
 
 // --------- //
@@ -124,6 +132,14 @@ void Game_drawArcs(struct Game *game, const float *originX,
  * @param game  The instance of the game
  */
 void Game_checkPlayerState(struct Game *game);
+
+/**
+ * Display and update the chronometer
+ * 
+ * @param game         The instance of the game
+ * @param currentTime  The current time          
+ */
+void Game_displayChrono(struct Game *game, int currentTime);
 
 /**
  * Play music in game

@@ -41,5 +41,11 @@
 #define CIRCLE_TO_RADIANT 6.28319
 #define PLAYER_POSSIBLE_POSITIONS 6
 #define PLAYER_WIDTH 25
+#define CHRONO_FILENAME "../assets/digits-small.png"
+#define CHRONO_Y (0.05 * SCREEN_HEIGHT)
+#define FIRST_DIGIT_X (0.8 * SCREEN_WIDTH + 32)
+#define SECOND_DIGIT_X (0.8 * SCREEN_WIDTH + 64)
+#define DOT_X (0.8 * SCREEN_WIDTH + 96)
+#define THIRD_DIGIT_X (0.8 * SCREEN_WIDTH + 128)
 #define MUSIC_FILENAME "../assets/courtesy.mp3"
 #define SOUND_FILENAME "../assets/game_over.wav"
