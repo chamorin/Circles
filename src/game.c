@@ -81,7 +81,7 @@ void Player_drawTrigon(SDL_Renderer *renderer, float *player_triang_posX,
                        const float *originY, float *angle,
                        const int *rotation) {
 
-  *angle += *rotation * M_PI / 180.0;
+  *angle += *rotation * PI / 180.0;
 
   *player_triang_posX = (*originX + cos(*angle) * CENTER_CIRCLE_RADIUS);
   *player_triang_posY = (*originY + sin(*angle) * CENTER_CIRCLE_RADIUS);

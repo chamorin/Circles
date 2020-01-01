@@ -1,6 +1,7 @@
 // General constants
 #define SCREEN_WIDTH  (0.5 * 2048)
 #define SCREEN_HEIGHT (0.5 * 1535)
+#define PI 3.1415926535897932384626433832795
 
 // Menu constants
 #define BACKGROUND_FILENAME "../assets/background-small.png"
