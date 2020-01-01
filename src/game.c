@@ -201,7 +201,6 @@ void Game_checkPlayerState(struct Game *game) {
 }
 
 void Game_playMusic() {
-  // The music that will be played
   Mix_Music *gMusic = NULL;
 
   if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
@@ -211,6 +210,6 @@ void Game_playMusic() {
 
   gMusic = Mix_LoadMUS(MUSIC_FILENAME);
   if (gMusic == NULL) {
-    printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
+    printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
   }
 }
