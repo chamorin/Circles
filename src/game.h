@@ -130,4 +130,9 @@ void Game_checkPlayerState(struct Game *game);
  */
 void Game_playMusic();
 
+/**
+ * Play game over sound in game
+ */
+void Game_playSound()
+
 #endif

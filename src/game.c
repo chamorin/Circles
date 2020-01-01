@@ -68,6 +68,7 @@ void Game_run(struct Game *game) {
     SDL_RenderPresent(game->renderer);
   }
   Mix_PauseMusic();
+  Game_playSound();
 }
 
 void Game_delete(struct Game *game) {
@@ -202,4 +203,19 @@ void Game_playMusic() {
     printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
   }
   Mix_PlayMusic(gMusic, -1);
+}
+
+void Game_playSound() {
+  Mix_Chunk *game_over = NULL;
+
+  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n",
+           Mix_GetError());
+  }
+
+  game_over = Mix_LoadWAV(SOUND_FILENAME);
+  if (game_over == NULL) {
+    printf("Failed to load sound! SDL_mixer Error: %s\n", Mix_GetError());
+  }
+  Mix_PlayChannel( -1, game_over, 0 );
 }

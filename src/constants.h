@@ -42,3 +42,4 @@
 #define PLAYER_POSSIBLE_POSITIONS 6
 #define PLAYER_WIDTH 25
 #define MUSIC_FILENAME "../assets/courtesy.mp3"
+#define SOUND_FILENAME "../assets/game_over.wav"
