@@ -41,7 +41,7 @@ void Game_run(struct Game *game) {
   if (gMusic == NULL) {
     printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
   }
-  Mix_PlayMusic( gMusic, -1 );
+  Mix_PlayMusic(gMusic, -1);
 
   while (game->state != GAME_OVER) {
     while (SDL_PollEvent(&e) != 0) {
