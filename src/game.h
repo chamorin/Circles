@@ -149,6 +149,6 @@ void Game_playMusic();
 /**
  * Play game over sound in game
  */
-void Game_playSound()
+void Game_playSound();
 
 #endif
