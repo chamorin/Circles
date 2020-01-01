@@ -13,6 +13,13 @@ struct Game *Game_initialize(SDL_Renderer *renderer) {
   game->renderer = renderer;
   game->state = GAME_PLAY;
   game->player_position = 1;
+  game->first_digit_sprite =
+      Spritesheet_create(CHRONO_FILENAME, 1, 11, 11, renderer);
+  game->second_digit_sprite =
+      Spritesheet_create(CHRONO_FILENAME, 1, 11, 11, renderer);
+  game->dot_sprite = Spritesheet_create(CHRONO_FILENAME, 1, 11, 11, renderer);
+  game->third_digit_sprite =
+      Spritesheet_create(CHRONO_FILENAME, 1, 11, 11, renderer);
   return game;
 }
 
@@ -24,11 +31,16 @@ void Game_run(struct Game *game) {
   int sector_arcs_rotation = game->difficulty;
   int player_rotation = game->difficulty;
   time_t t;
+  int currentTime = 0;
   srand((unsigned)time(&t));
   game->state = GAME_PLAY;
   game->player_position = 1;
   game->player_triang_posX = (originX + cos(angle) * CENTER_CIRCLE_RADIUS);
   game->player_triang_posY = (originY + sin(angle) * CENTER_CIRCLE_RADIUS);
+  game->second_count = 0;
+  game->tenth_count = 0;
+  game->tenth_of_second_count = 0;
+  game->last_time = 0;
   Game_initArcs(game);
   Game_playMusic();
 
@@ -45,6 +57,7 @@ void Game_run(struct Game *game) {
         }
       }
     }
+
     SDL_SetRenderDrawColor(game->renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(game->renderer);
 
@@ -64,6 +77,8 @@ void Game_run(struct Game *game) {
                       &player_rotation);
 
     Game_checkPlayerState(game);
+    currentTime = SDL_GetTicks();
+    Game_displayChrono(game, currentTime);
 
     SDL_RenderPresent(game->renderer);
   }
@@ -189,6 +204,31 @@ void Game_checkPlayerState(struct Game *game) {
   }
 }
 
+void Game_displayChrono(struct Game *game, int currentTime) {
+  Spritesheet_render(game->first_digit_sprite, FIRST_DIGIT_X, CHRONO_Y, 255,
+                     game->tenth_count);
+  Spritesheet_render(game->second_digit_sprite, SECOND_DIGIT_X, CHRONO_Y, 255,
+                     game->second_count);
+  Spritesheet_render(game->dot_sprite, DOT_X, CHRONO_Y, 255, 10);
+  Spritesheet_render(game->third_digit_sprite, THIRD_DIGIT_X, CHRONO_Y, 255,
+                     game->tenth_of_second_count);
+
+  if (currentTime > game->last_time + 100) {
+    game->last_time = currentTime;
+    game->tenth_of_second_count++;
+    if (game->tenth_of_second_count > 9) {
+      game->tenth_of_second_count = 0;
+      game->second_count++;
+    }
+    if (game->second_count > 9) {
+      game->second_count = 0;
+      game->tenth_count++;
+    }
+    if (game->tenth_count > 9) {
+      game->tenth_count = 0;
+    }
+  }
+}
 void Game_playMusic() {
   Mix_Music *gMusic = NULL;
 
