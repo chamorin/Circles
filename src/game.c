@@ -5,6 +5,7 @@
 
 #include <math.h>
 #include <stdbool.h>
+#include <time.h>
 
 struct Game *Game_initialize(SDL_Renderer *renderer) {
   struct Game *game;
@@ -15,12 +16,9 @@ struct Game *Game_initialize(SDL_Renderer *renderer) {
   return game;
 }
 
-int Game_alpha(bool chosen) { return chosen ? 255 : 64; }
-
 void Game_run(struct Game *game) {
   SDL_Event e;
   float angle = SECTOR_ANGLE_RADIANT + SECTOR_ANGLE_RADIANT / 2;
-  float sector_angle = CIRCLE_TO_RADIANT;
   float originX = SCREEN_WIDTH / 2;
   float originY = SCREEN_HEIGHT / 2;
   int sector_arcs_rotation = game->difficulty;
@@ -32,6 +30,18 @@ void Game_run(struct Game *game) {
   game->player_triang_posX = (originX + cos(angle) * CENTER_CIRCLE_RADIUS);
   game->player_triang_posY = (originY + sin(angle) * CENTER_CIRCLE_RADIUS);
   Game_initArcs(game);
+  Mix_Music *gMusic = NULL;
+
+  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n",
+           Mix_GetError());
+  }
+
+  gMusic = Mix_LoadMUS(MUSIC_FILENAME);
+  if (gMusic == NULL) {
+    printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
+  }
+  Mix_PlayMusic( gMusic, -1 );
 
   while (game->state != GAME_OVER) {
     while (SDL_PollEvent(&e) != 0) {
@@ -56,8 +66,7 @@ void Game_run(struct Game *game) {
     filledCircleRGBA(game->renderer, originX, originY,
                      CENTER_CIRCLE_RADIUS - 20, 128, 128, 128, 255);
 
-    Game_drawArcs(game->renderer, game, &originX, &originY,
-                  &sector_arcs_rotation);
+    Game_drawArcs(game, &originX, &originY, &sector_arcs_rotation);
 
     Game_resetArcs(game);
 
@@ -69,6 +78,7 @@ void Game_run(struct Game *game) {
 
     SDL_RenderPresent(game->renderer);
   }
+  Mix_PauseMusic();
 }
 
 void Game_delete(struct Game *game) {
@@ -137,10 +147,10 @@ void Game_drawBackground(SDL_Renderer *renderer, const float *originX,
 
 void Game_initArcs(struct Game *game) {
 
-  for (int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i)
+  for (unsigned int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i)
     game->arcs[i] = 0;
 
-  for (int i = 0; i < 3 + game->difficulty; ++i)
+  for (unsigned int i = 0; i < 3 + game->difficulty; ++i)
     game->arcs[rand() % PLAYER_POSSIBLE_POSITIONS] = 500;
 }
 
@@ -156,9 +166,8 @@ void Game_resetArcs(struct Game *game) {
   }
 }
 
-void Game_drawArcs(SDL_Renderer *renderer, struct Game *game,
-                   const float *originX, const float *originY,
-                   const int *rotation) {
+void Game_drawArcs(struct Game *game, const float *originX,
+                   const float *originY, const int *rotation) {
   for (int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i) {
     if (game->arcs[i] != 0) {
       arcRGBA(game->renderer, *originX, *originY, game->arcs[i],
@@ -183,10 +192,25 @@ void Game_drawArcs(SDL_Renderer *renderer, struct Game *game,
 }
 
 void Game_checkPlayerState(struct Game *game) {
-  for (int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i) {
+  for (unsigned int i = 0; i < PLAYER_POSSIBLE_POSITIONS; ++i) {
     if (game->arcs[i] <= CENTER_CIRCLE_RADIUS && game->arcs[i] > 0 &&
         game->player_position == i) {
       game->state = GAME_OVER;
     }
+  }
+}
+
+void Game_playMusic() {
+  // The music that will be played
+  Mix_Music *gMusic = NULL;
+
+  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n",
+           Mix_GetError());
+  }
+
+  gMusic = Mix_LoadMUS(MUSIC_FILENAME);
+  if (gMusic == NULL) {
+    printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
   }
 }

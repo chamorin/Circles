@@ -24,9 +24,9 @@ struct Menu {
     struct Spritesheet *play;       // The play sprite
     struct Spritesheet *quit;       // The quit sprite
     struct Spritesheet *diff;       // The difficulty sprite
-    struct Sritesheet  * easy;      // The easy sprite
-    struct Sritesheet  * medium;    // The medium sprite
-    struct Sritesheet  * hard;      // The hard sprite
+    struct Spritesheet *easy;       // The easy sprite
+    struct Spritesheet *medium;     // The medium sprite
+    struct Spritesheet *hard;       // The hard sprite
     SDL_Renderer *renderer;         // The renderer
 };
 
