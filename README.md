@@ -22,11 +22,11 @@ Cours: Construction et maintenance de logiciels (INF3135) Universtié du Québec
 
 Pour compiler il suffit d'aller dans le dossier ```src``` et d'éffectuer la commande ```make```.
 Pour exécuter le programme, il faut faire ```./circles```.
-Pour naviguez dans le menu, il faut utiliser les flèches du clavier.
+Pour naviguer dans le menu, il faut utiliser les flèches du clavier.
 Avant de commencer une partie, la sélection d'une difficutlé est obligatoire.
 Le bouton "Play" permet de lancer une partie et le bouton "Quit" permet de quitter le jeu.
-Le but du jeu est de déplacer le triangle avec les flèches du clavier, pour évité les murs
-qui s'approche au fur et à mesure. Si le joueur touche un mur, la partie est terminé.
+Le but du jeu est de déplacer le triangle avec les flèches du clavier, pour éviter les murs
+qui s'approchent au fur et à mesure. Si le joueur touche un mur, la partie est terminé.
 Un chronomètre augmente durant la partie pour indiquer au joueur son score.
 La figure ci-bas illustre le menu du jeu.
 ![Menu](screenshots/menu.jpg)
