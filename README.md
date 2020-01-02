@@ -14,7 +14,8 @@ Cours: Construction et maintenance de logiciels (INF3135) Universtié du Québec
 
 * [SDL2](https://www.libsdl.org/), librairie d'affichage graphique en c.
 * [SDL2_gfx](http://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/), ajoute des fonctions à SDL2.
-* [SDL_mixer 2.0](https://www.libsdl.org/projects/SDL_mixer/), librairie pour les effets sonnores
+* [SDL_image 2.0](https://www.libsdl.org/projects/SDL_image/), librairie pour les sprites. 
+* [SDL_mixer 2.0](https://www.libsdl.org/projects/SDL_mixer/), librairie pour les effets sonnores.
 
 
 ## Fonctionnement
